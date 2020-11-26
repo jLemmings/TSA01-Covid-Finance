@@ -1,0 +1,7 @@
+COVID API: https://documenter.getpostman.com/view/10808728/SzS8rjbc
+FINANCE API: https://www.alphavantage.co/documentation/
+
+TODO:
+- Countries to look at: Switzerland, Italy, China, USA, Germany
+- Per Country one dataframe (Name, Day one, total cases, new cases)
+
