@@ -57,4 +57,8 @@ usaCovid <- usaCovid %>%
 usaCovid[1, "New Cases"] <- 1
 usaCovid <- usaCovid[ , !(names(usaCovid) %in% drops)]
 
+TODO:
+  - Josh: Time Series, decompose, returns
+  - Anna: stationarity, stationarity series
+
 
