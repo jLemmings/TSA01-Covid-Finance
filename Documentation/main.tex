@@ -19,17 +19,7 @@
 \usepackage{listings-golang}
 \usepackage{color}
 
-\lstset{ % add your own preferences
-    frame=single,
-    basicstyle=\footnotesize,
-    keywordstyle=\color{red},
-    numbers=left,
-    numbersep=5pt,
-    showstringspaces=false, 
-    stringstyle=\color{blue},
-    tabsize=4,
-    language=Golang % this is it !
-}
+
 
 %% ===============================================
 %% Setting the line spacing (3 options: only pick one)
@@ -47,7 +37,7 @@
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % TITLE:
-\title{PCP Project Go}
+\title{TSA Covid Finance}
 
 
 \pagestyle{fancy}
@@ -86,23 +76,46 @@
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % --------------------
-\section{Einleitung}
+\section{Introduction}
+% --------------------
+% --------------------
+\section{Literature Review}
+% --------------------
+% --------------------
+\section{Methods}
+% --------------------
+In order to investigate a causality between the corona case numbers and financial market data, the first step is to prepare the data so that they are comparable with each other. After cleansing and preparing the data, the "Augmented Dickey-Fuller Test" is used to check whether the time series are stationary. If the time series are not stationary, the time series are modified using the \lstinline{diff(log())} method. This procedure is repeated until the "Dickey-Fuller Test" shows that the time series are stationary. Then, the stationary time series are used for the calculation of vector autoreggressive models. Furthermore, Granger causality tests are performed.
+\subsection{Stationarity}
+In order to create the VAR models, we must first ensure that the time series are stationary. "A stationary time series is one whose statistical properties such as mean, variance, autocorrelation, etc. are all constant over time."(\cite{Stationa72:online}) For verification, the Augemented Dicky Fullman test is performed on all time series. The test returns the following p-values for the corona case numbers per country:
+\begin{table}[h!]
+\centering
+\caption{P-Values }
+\label{tab:p-values-corona}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Country} & \textbf{P-Value} \\ \hline
+China            & 0.01             \\ \hline
+Italy            & 0.01             \\ \hline
+Switzerland      & 0.99             \\ \hline
+Germany          & 0.24             \\ \hline
+USA              & 0.99             \\ \hline
+\end{tabular}
+\end{table}
+For the time series of Switzerland, USA and Germany the P-value is greater than 0.05, meaning these time series are not stationary. Therefore we try to create stationarity by using the first differences.
+
+
+\subsection{VAR-Modell and Granger Causality}
+
+
+% --------------------
+\section{Results}
+% --------------------
+% --------------------
+\subsection{Outlook}
 % --------------------
 
-% --------------------
-\
-% --------------------
 
 
-
-
-\begin{figure}[htb]
-  \centering
-  \subfloat[Case 1]{\includegraphics[width=0.35\textwidth]{figures/Slices Go 1.png}\label{fig:f1}}
-  \hfill
-  \subfloat[Case 2]{\includegraphics[width=0.35\textwidth]{figures/Slices Go.png}\label{fig:f2}}
-  \caption{Slices  (\cite{Slices:medium})}
-\end{figure}
 
 
 
