@@ -102,7 +102,29 @@ USA              & 0.99             \\ \hline
 \end{tabular}
 \end{table}
 For the time series of Switzerland, USA and Germany the P-value is greater than 0.05, meaning these time series are not stationary. Therefore we try to create stationarity by using the first differences.
+\begin{table}[h!]
+\centering
+\caption{P-Values after first Differences}
+\label{tab:p-values-first-diff}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Country} & \textbf{P-Value} \\ \hline
+Switzerland      & 0.03             \\ \hline
+Germany          & 0.02             \\ \hline
+USA              & 0.15             \\ \hline
+\end{tabular}
+\end{table}
 
+\begin{table}[h!]
+\centering
+\caption{P-Values after second Differences}
+\label{tab:p-values-second-diff}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Country} & \textbf{P-Value} \\ \hline
+USA              & 0.99             \\ \hline
+\end{tabular}
+\end{table}
 
 \subsection{VAR-Modell and Granger Causality}
 
