@@ -1,6 +1,7 @@
 # Loading required package
 #install.packages("quantmod")
 library(quantmod)
+library(tseries)
 
 # Downloading Prices via Yahoo Finance API
 finance_data <- NULL
@@ -129,7 +130,7 @@ adf.test(usaFinance) # p-value = 0.01
 
 
 ## TODO:
-#  - Josh: Time Series, decompose, returns
+#  - Josh: Time Series, decompose, returns  
 #  - Anna: stationarity, stationarity series
 
 
