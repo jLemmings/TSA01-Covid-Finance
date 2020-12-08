@@ -3,36 +3,6 @@
 library(quantmod)
 library(tseries)
 library(tidyverse)
-
-# Downloading Prices via Yahoo Finance API
-finance_data <- NULL
-tickers_index <-
-  c("FTSEMIB.MI", "^DJI", "DB1.DE", "^SSMI", "000001.SS")
-
-for (Ticker in tickers_index) {
-  finance_data <- cbind(
-    finance_data,
-    getSymbols.yahoo(
-      Ticker,
-      from = "2020-01-22",
-      periodicity = "daily",
-      auto.assign = FALSE
-    )[, 6]
-  )
-}
-
-# Replace each NA value with the value from the day before
-for (ticker in 1:ncol(finance_data)) {
-  for (row in 1:nrow(finance_data)) {
-    if(is.na(finance_data[row, ticker])) {
-      finance_data[row, ticker] <- finance_data[row-1, ticker]
-    }
-  }
-}
-
-sum(is.na(finance_data))
-
-# GET COVID DATA
 library(jsonlite)
 require(dplyr)
 
@@ -70,8 +40,6 @@ usaCovid <- usaCovid %>%
 usaCovid[1, "New_Cases"] <- 1
 usaCovid <- usaCovid[ , !(names(usaCovid) %in% drops)]
 
-cowid_covid_data <- read_csv("cowid-covid-data.csv")
-
 #Create Timeseries 
 chinaCovid$Date = as.Date(chinaCovid$Date, format = "%Y-%m-%d")
 italyCovid$Date = as.Date(italyCovid$Date, format = "%Y-%m-%d")
@@ -93,7 +61,43 @@ swissCovidDecomposed <- decompose(swissCovid)
 germanyCovidDecomposed <- decompose(germanyCovid)
 usaCovidDecomposed <- decompose(usaCovid)
 
+plot(chinaCovidDecomposed)
+plot(italyCovidDecomposed)
+plot(swissCovidDecomposed)
+plot(germanyCovidDecomposed)
+plot(usaCovidDecomposed)
 
+### Covid Data from CSV
+cowid_covid_data <- read_csv("cowid-covid-data.csv")
+
+
+# Downloading Prices via Yahoo Finance API
+finance_data <- NULL
+tickers_index <-
+  c("FTSEMIB.MI", "^DJI", "DB1.DE", "^SSMI", "000001.SS")
+
+for (Ticker in tickers_index) {
+  finance_data <- cbind(
+    finance_data,
+    getSymbols.yahoo(
+      Ticker,
+      from = "2020-01-22",
+      periodicity = "daily",
+      auto.assign = FALSE
+    )[, 6]
+  )
+}
+
+# Replace each NA value with the value from the day before
+for (ticker in 1:ncol(finance_data)) {
+  for (row in 1:nrow(finance_data)) {
+    if(is.na(finance_data[row, ticker])) {
+      finance_data[row, ticker] <- finance_data[row-1, ticker]
+    }
+  }
+}
+
+sum(is.na(finance_data))
 
 # WHY ARE Finance Timeseries ONLY [1:227] long and covid data [1:316]
 chinaFinance = ts(finance_data$X000001.SS.Adjusted, start = c(2020, dayOfYear), frequency = 12)
