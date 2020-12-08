@@ -2,6 +2,7 @@
 #install.packages("quantmod")
 library(quantmod)
 library(tseries)
+library(tidyverse)
 
 # Downloading Prices via Yahoo Finance API
 finance_data <- NULL
@@ -68,6 +69,8 @@ usaCovid <- usaCovid %>%
   mutate("New_Cases" = Cases - lag(Cases, default = Cases[1]))
 usaCovid[1, "New_Cases"] <- 1
 usaCovid <- usaCovid[ , !(names(usaCovid) %in% drops)]
+
+cowid_covid_data <- read_csv("cowid-covid-data.csv")
 
 #Create Timeseries 
 chinaCovid$Date = as.Date(chinaCovid$Date, format = "%Y-%m-%d")
