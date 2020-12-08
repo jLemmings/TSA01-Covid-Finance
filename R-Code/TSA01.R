@@ -91,7 +91,9 @@ chinaCovidDecomposed <- decompose(chinaCovid)
 italyCovidDecomposed <- decompose(italyCovid)
 swissCovidDecomposed <- decompose(swissCovid)
 germanyCovidDecomposed <- decompose(germanyCovid)
-isaCovidDecomposed <- decompose(usaCovid)
+usaCovidDecomposed <- decompose(usaCovid)
+
+
 
 # WHY ARE Finance Timeseries ONLY [1:227] long and covid data [1:316]
 chinaFinance = ts(finance_data$X000001.SS.Adjusted, start = c(2020, dayOfYear), frequency = 12)
