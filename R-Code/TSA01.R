@@ -6,6 +6,10 @@ library(tidyverse)
 library(jsonlite)
 require(dplyr)
 
+countries <- c("Switzerland", "Germany", "Italy", "China", "United States")
+
+### Covid Data from API
+
 drops <- c("CountryCode","Province", "City", "CityCode", "Lat", "Lon")
 
 swissCovid <-
@@ -68,9 +72,24 @@ plot(germanyCovidDecomposed)
 plot(usaCovidDecomposed)
 
 ### Covid Data from CSV
-cowid_covid_data <- read_csv("cowid-covid-data.csv")
+covid_data <- read_csv("cowid-covid-data.csv")
+colToKeep <- c("location", "date", "total_cases", "new_cases", "total_deaths", "new_deaths", "new_cases_per_million", "new_deaths_per_million", "total_tests", "new_tests")
+
+covid_data = subset(covid_data, select = colToKeep )
+covid_data_filtered <- covid_data[covid_data$location %in% countries,]
+
+switzerlandCovidCSV <- covid_data_filtered[covid_data_filtered$location == "Switzerland",]
+germanyCovidCSV <- covid_data_filtered[covid_data_filtered$location == "Germany",]
+italyCovidCSV <- covid_data_filtered[covid_data_filtered$location == "Italy",]
+chinaCovidCSV <- covid_data_filtered[covid_data_filtered$location == "China",]
+usaCovidCSV <- covid_data_filtered[covid_data_filtered$location == "United States",]
+
+# For some reason China and USA have recorded data one day before the others
+chinaCovidCSV = chinaCovidCSV[-1,]
+usaCovidCSV = usaCovidCSV[-1,]
 
 
+### FINANCE PART
 # Downloading Prices via Yahoo Finance API
 finance_data <- NULL
 tickers_index <-
