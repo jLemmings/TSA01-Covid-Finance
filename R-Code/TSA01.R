@@ -72,12 +72,27 @@ swissCovid = ts(swissCovid$Cases, start = c(2020, dayOfYear), frequency = 365)
 germanyCovid = ts(germanyCovid$Cases, start = c(2020, dayOfYear), frequency = 365)
 usaCovid = ts(usaCovid$Cases, start = c(2020, dayOfYear), frequency = 365)
 
+# Error: time series has no or less than 2 periods
+chinaCovidDecomposed = decompose(chinaCovid)
+italyCovidDecomposed = decompose(italyCovid)
+swissCovidDecomposed = decompose(swissCovid)
+germanyCovidDecomposed = decompose(germanyCovid)
+isaCovidDecomposed = decompose(usaCovid)
+
+
 # WHY ARE Finance Timeseries ONLY [1:227] long and covid data [1:316]
 chinaFinance = ts(finance_data$X000001.SS.Adjusted, start = c(2020, dayOfYear), frequency = 365)
 swissFinance = ts(finance_data$SSMI.Adjusted, start = c(2020, dayOfYear), frequency = 365)
 germanyFinance = ts(finance_data$DB1.DE.Adjusted, start = c(2020, dayOfYear), frequency = 365)
 italyFinance = ts(finance_data$FTSEMIB.MI.Adjusted, start = c(2020, dayOfYear), frequency = 365)
 usaFinance = ts(finance_data$DJI.Adjusted, start = c(2020, dayOfYear), frequency = 365)
+
+# Must fix time series NA values before
+chinaFinanceDecomposed = decompose(chinaFinance)
+swissFinanceDecomposed = decompose(swissFinance)
+germanyFinanceDecomposed = decompose(germanyFinance)
+italyFinanceDecomposed = decompose(italyFinance)
+usaFinanceDecomposed = decompose(usaFinance)
 
 # Replaces NA with 0
 chinaFinance[!is.finite(chinaFinance)] <- 0
