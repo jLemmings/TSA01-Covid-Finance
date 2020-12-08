@@ -20,6 +20,17 @@ for (Ticker in tickers_index) {
   )
 }
 
+# Replace each NA value with the value from the day before
+for (ticker in 1:ncol(finance_data)) {
+  for (row in 1:nrow(finance_data)) {
+    if(is.na(finance_data[row, ticker])) {
+      finance_data[row, ticker] <- finance_data[row-1, ticker]
+    }
+  }
+}
+
+sum(is.na(finance_data))
+
 # GET COVID DATA
 library(jsonlite)
 require(dplyr)
