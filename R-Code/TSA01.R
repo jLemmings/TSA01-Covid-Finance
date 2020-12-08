@@ -80,28 +80,27 @@ germanyCovid$Date = as.Date(germanyCovid$Date, format = "%Y-%m-%d")
 usaCovid$Date = as.Date(usaCovid$Date, format = "%Y-%m-%d")
 
 dayOfYear = as.numeric(format(chinaCovid[1,4], "%j"))
-chinaCovid =  ts(chinaCovid$Cases, start = c(2020, dayOfYear), frequency = 365)
-italyCovid = ts(italyCovid$Cases, start = c(2020, dayOfYear), frequency = 365)
-swissCovid = ts(swissCovid$Cases, start = c(2020, dayOfYear), frequency = 365)
-germanyCovid = ts(germanyCovid$Cases, start = c(2020, dayOfYear), frequency = 365)
-usaCovid = ts(usaCovid$Cases, start = c(2020, dayOfYear), frequency = 365)
+chinaCovid =  ts(chinaCovid$Cases, start = c(2020, dayOfYear), frequency = 12)
+italyCovid = ts(italyCovid$Cases, start = c(2020, dayOfYear), frequency = 12)
+swissCovid = ts(swissCovid$Cases, start = c(2020, dayOfYear), frequency = 12)
+germanyCovid = ts(germanyCovid$Cases, start = c(2020, dayOfYear), frequency = 12)
+usaCovid = ts(usaCovid$Cases, start = c(2020, dayOfYear), frequency = 12)
 
-# Error: time series has no or less than 2 periods
+# Error: time series has no or less than 2 periods -> changed time series frequency to 12 (monthly)
 chinaCovidDecomposed <- decompose(chinaCovid)
 italyCovidDecomposed <- decompose(italyCovid)
 swissCovidDecomposed <- decompose(swissCovid)
 germanyCovidDecomposed <- decompose(germanyCovid)
 isaCovidDecomposed <- decompose(usaCovid)
 
-
 # WHY ARE Finance Timeseries ONLY [1:227] long and covid data [1:316]
-chinaFinance = ts(finance_data$X000001.SS.Adjusted, start = c(2020, dayOfYear), frequency = 365)
-swissFinance = ts(finance_data$SSMI.Adjusted, start = c(2020, dayOfYear), frequency = 365)
-germanyFinance = ts(finance_data$DB1.DE.Adjusted, start = c(2020, dayOfYear), frequency = 365)
-italyFinance = ts(finance_data$FTSEMIB.MI.Adjusted, start = c(2020, dayOfYear), frequency = 365)
-usaFinance = ts(finance_data$DJI.Adjusted, start = c(2020, dayOfYear), frequency = 365)
+chinaFinance = ts(finance_data$X000001.SS.Adjusted, start = c(2020, dayOfYear), frequency = 12)
+swissFinance = ts(finance_data$SSMI.Adjusted, start = c(2020, dayOfYear), frequency = 12)
+germanyFinance = ts(finance_data$DB1.DE.Adjusted, start = c(2020, dayOfYear), frequency = 12)
+italyFinance = ts(finance_data$FTSEMIB.MI.Adjusted, start = c(2020, dayOfYear), frequency = 12)
+usaFinance = ts(finance_data$DJI.Adjusted, start = c(2020, dayOfYear), frequency = 12)
 
-# Must fix time series NA values before
+# Error: time series has no or less than 2 periods -> changed time series frequency to 12 (monthly)
 chinaFinanceDecomposed <- decompose(chinaFinance)
 swissFinanceDecomposed <- decompose(swissFinance)
 germanyFinanceDecomposed <- decompose(germanyFinance)
