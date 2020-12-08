@@ -6,57 +6,69 @@ library(tidyverse)
 library(jsonlite)
 require(dplyr)
 
-countries <- c("Switzerland", "Germany", "Italy", "China", "United States")
+countries <-
+  c("Switzerland", "Germany", "Italy", "China", "United States")
 
 ### Covid Data from API
 
-drops <- c("CountryCode","Province", "City", "CityCode", "Lat", "Lon")
+drops <-
+  c("CountryCode", "Province", "City", "CityCode", "Lat", "Lon")
 
 swissCovid <-
   fromJSON("https://api.covid19api.com/total/country/switzerland/status/confirmed")
 swissCovid <- swissCovid %>%
   mutate("New_Cases" = Cases - lag(Cases, default = Cases[1]))
-swissCovid <- swissCovid[ , !(names(swissCovid) %in% drops)]
+swissCovid <- swissCovid[, !(names(swissCovid) %in% drops)]
 
 italyCovid <-
   fromJSON("https://api.covid19api.com/total/country/italy/status/confirmed")
 italyCovid <- italyCovid %>%
   mutate("New_Cases" = Cases - lag(Cases, default = Cases[1]))
-italyCovid <- italyCovid[ , !(names(italyCovid) %in% drops)]
+italyCovid <- italyCovid[, !(names(italyCovid) %in% drops)]
 
 germanyCovid <-
   fromJSON("https://api.covid19api.com/total/country/germany/status/confirmed")
 germanyCovid <- germanyCovid %>%
   mutate("New_Cases" = Cases - lag(Cases, default = Cases[1]))
-germanyCovid <- germanyCovid[ , !(names(germanyCovid) %in% drops)]
+germanyCovid <- germanyCovid[, !(names(germanyCovid) %in% drops)]
 
 chinaCovid <-
   fromJSON("https://api.covid19api.com/total/country/china/status/confirmed")
 chinaCovid <- chinaCovid %>%
   mutate("New_Cases" = Cases - lag(Cases, default = Cases[1]))
 chinaCovid[1, "New_Cases"] <- 548
-chinaCovid <- chinaCovid[ , !(names(chinaCovid) %in% drops)]
+chinaCovid <- chinaCovid[, !(names(chinaCovid) %in% drops)]
 
 usaCovid <-
   fromJSON("https://api.covid19api.com/total/country/united-states/status/confirmed")
 usaCovid <- usaCovid %>%
   mutate("New_Cases" = Cases - lag(Cases, default = Cases[1]))
 usaCovid[1, "New_Cases"] <- 1
-usaCovid <- usaCovid[ , !(names(usaCovid) %in% drops)]
+usaCovid <- usaCovid[, !(names(usaCovid) %in% drops)]
 
-#Create Timeseries 
+#Create Timeseries
 chinaCovid$Date = as.Date(chinaCovid$Date, format = "%Y-%m-%d")
 italyCovid$Date = as.Date(italyCovid$Date, format = "%Y-%m-%d")
 swissCovid$Date = as.Date(swissCovid$Date, format = "%Y-%m-%d")
 germanyCovid$Date = as.Date(germanyCovid$Date, format = "%Y-%m-%d")
 usaCovid$Date = as.Date(usaCovid$Date, format = "%Y-%m-%d")
 
-dayOfYear = as.numeric(format(chinaCovid[1,4], "%j"))
-chinaCovid =  ts(chinaCovid$Cases, start = c(2020, dayOfYear), frequency = 12)
-italyCovid = ts(italyCovid$Cases, start = c(2020, dayOfYear), frequency = 12)
-swissCovid = ts(swissCovid$Cases, start = c(2020, dayOfYear), frequency = 12)
-germanyCovid = ts(germanyCovid$Cases, start = c(2020, dayOfYear), frequency = 12)
-usaCovid = ts(usaCovid$Cases, start = c(2020, dayOfYear), frequency = 12)
+dayOfYear = as.numeric(format(chinaCovid[1, 4], "%j"))
+chinaCovid =  ts(chinaCovid$Cases,
+                 start = c(2020, dayOfYear),
+                 frequency = 12)
+italyCovid = ts(italyCovid$Cases,
+                start = c(2020, dayOfYear),
+                frequency = 12)
+swissCovid = ts(swissCovid$Cases,
+                start = c(2020, dayOfYear),
+                frequency = 12)
+germanyCovid = ts(germanyCovid$Cases,
+                  start = c(2020, dayOfYear),
+                  frequency = 12)
+usaCovid = ts(usaCovid$Cases,
+              start = c(2020, dayOfYear),
+              frequency = 12)
 
 # Error: time series has no or less than 2 periods -> changed time series frequency to 12 (monthly)
 chinaCovidDecomposed <- decompose(chinaCovid)
@@ -73,16 +85,34 @@ plot(usaCovidDecomposed)
 
 ### Covid Data from CSV
 covid_data <- read_csv("cowid-covid-data.csv")
-colToKeep <- c("location", "date", "total_cases", "new_cases", "total_deaths", "new_deaths", "new_cases_per_million", "new_deaths_per_million", "total_tests", "new_tests")
+colToKeep <-
+  c(
+    "location",
+    "date",
+    "total_cases",
+    "new_cases",
+    "total_deaths",
+    "new_deaths",
+    "new_cases_per_million",
+    "new_deaths_per_million",
+    "total_tests",
+    "new_tests"
+  )
 
-covid_data = subset(covid_data, select = colToKeep )
-covid_data_filtered <- covid_data[covid_data$location %in% countries,]
+covid_data = subset(covid_data, select = colToKeep)
+covid_data_filtered <-
+  covid_data[covid_data$location %in% countries,]
 
-switzerlandCovidCSV <- covid_data_filtered[covid_data_filtered$location == "Switzerland",]
-germanyCovidCSV <- covid_data_filtered[covid_data_filtered$location == "Germany",]
-italyCovidCSV <- covid_data_filtered[covid_data_filtered$location == "Italy",]
-chinaCovidCSV <- covid_data_filtered[covid_data_filtered$location == "China",]
-usaCovidCSV <- covid_data_filtered[covid_data_filtered$location == "United States",]
+switzerlandCovidCSV <-
+  covid_data_filtered[covid_data_filtered$location == "Switzerland",]
+germanyCovidCSV <-
+  covid_data_filtered[covid_data_filtered$location == "Germany",]
+italyCovidCSV <-
+  covid_data_filtered[covid_data_filtered$location == "Italy",]
+chinaCovidCSV <-
+  covid_data_filtered[covid_data_filtered$location == "China",]
+usaCovidCSV <-
+  covid_data_filtered[covid_data_filtered$location == "United States",]
 
 # For some reason China and USA have recorded data one day before the others
 chinaCovidCSV = chinaCovidCSV[-1,]
@@ -100,30 +130,58 @@ for (Ticker in tickers_index) {
     finance_data,
     getSymbols.yahoo(
       Ticker,
-      from = "2020-01-22",
+      from = "2020-01-23",
+      to = "2020-12-06",
       periodicity = "daily",
       auto.assign = FALSE
     )[, 6]
   )
 }
 
+date <- seq(as.Date("2020-01-23"), as.Date("2020-12-06"), by = "days")
+date_sequence <- data.frame(date)
+
+finance_df <- data.frame(date=index(finance_data), coredata(finance_data))
+
+# Merge finance date on date sequence
+finance_data <- merge(date_sequence, finance_df, by.x = "date", by.y = "date", all.x=TRUE)
+
 # Replace each NA value with the value from the day before
 for (ticker in 1:ncol(finance_data)) {
   for (row in 1:nrow(finance_data)) {
-    if(is.na(finance_data[row, ticker])) {
-      finance_data[row, ticker] <- finance_data[row-1, ticker]
+    if (is.na(finance_data[row, ticker])) {
+      finance_data[row, ticker] <- finance_data[row - 1, ticker]
     }
   }
 }
 
-sum(is.na(finance_data))
 
 # WHY ARE Finance Timeseries ONLY [1:227] long and covid data [1:316]
-chinaFinance = ts(finance_data$X000001.SS.Adjusted, start = c(2020, dayOfYear), frequency = 12)
-swissFinance = ts(finance_data$SSMI.Adjusted, start = c(2020, dayOfYear), frequency = 12)
-germanyFinance = ts(finance_data$DB1.DE.Adjusted, start = c(2020, dayOfYear), frequency = 12)
-italyFinance = ts(finance_data$FTSEMIB.MI.Adjusted, start = c(2020, dayOfYear), frequency = 12)
-usaFinance = ts(finance_data$DJI.Adjusted, start = c(2020, dayOfYear), frequency = 12)
+chinaFinance = ts(
+  finance_data$X000001.SS.Adjusted,
+  start = c(2020, dayOfYear),
+  frequency = 12
+)
+swissFinance = ts(
+  finance_data$SSMI.Adjusted,
+  start = c(2020, dayOfYear),
+  frequency = 12
+)
+germanyFinance = ts(
+  finance_data$DB1.DE.Adjusted,
+  start = c(2020, dayOfYear),
+  frequency = 12
+)
+italyFinance = ts(
+  finance_data$FTSEMIB.MI.Adjusted,
+  start = c(2020, dayOfYear),
+  frequency = 12
+)
+usaFinance = ts(
+  finance_data$DJI.Adjusted,
+  start = c(2020, dayOfYear),
+  frequency = 12
+)
 
 # Error: time series has no or less than 2 periods -> changed time series frequency to 12 (monthly)
 chinaFinanceDecomposed <- decompose(chinaFinance)
@@ -183,7 +241,5 @@ adf.test(usaFinance) # p-value = 0.01
 
 
 ## TODO:
-#  - Josh: Time Series, decompose, returns  
+#  - Josh: Time Series, decompose, returns
 #  - Anna: stationarity, stationarity series
-
-
