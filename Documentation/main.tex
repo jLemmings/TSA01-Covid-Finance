@@ -20,7 +20,6 @@
 \usepackage{color}
 
 
-
 %% ===============================================
 %% Setting the line spacing (3 options: only pick one)
 % \doublespacing
@@ -84,7 +83,14 @@
 % --------------------
 \section{Methods}
 % --------------------
-In order to investigate a causality between the corona case numbers and financial market data, the first step is to prepare the data so that they are comparable with each other. After cleansing and preparing the data, the "Augmented Dickey-Fuller Test" is used to check whether the time series are stationary. If the time series are not stationary, the time series are modified using the \lstinline{diff(log())} method. This procedure is repeated until the "Dickey-Fuller Test" shows that the time series are stationary. Then, the stationary time series are used for the calculation of vector autoreggressive models. Furthermore, Granger causality tests are performed.
+In order to investigate a causality between the corona case numbers and financial market data, the first step is to prepare the data so that they are comparable with each other. After cleansing and preparing the data, the "Augmented Dickey-Fuller Test" is used to check whether the time series are stationary. If the time series are not stationary, the time series are modified using the \lstinline{diff(log())} method (). This procedure is repeated until the "Dickey-Fuller Test" shows that the time series are stationary. Then, the stationary time series are used for the calculation of vector autoreggressive models. Furthermore, Granger causality tests are performed.
+
+\subsection{Descriptive Analysis: Visualization, data preparation and decomposition of time series}
+\subsubsection{Datapreparation: Returns}
+In the financial sector, in addition to the absolute level of a time series, its growth rates/returns are often of interest.
+Since continuous growth rates/returns are additive due to logarithmizing and more closely match the normal distribution, they are often preferred to discrete returns in time series analysis and econometrics in general. (\cite{PowerPoi49:online})
+$$r_{t} =\ln \left(Y_{t}\right)-\ln \left(Y_{t-1}\right)$$
+
 \subsection{Stationarity}
 In order to create the VAR models, we must first ensure that the time series are stationary. "A stationary time series is one whose statistical properties such as mean, variance, autocorrelation, etc. are all constant over time."(\cite{Stationa72:online}) For verification, the Augemented Dicky Fullman test is performed on all time series. The test returns the following p-values for the corona case numbers per country:
 \begin{table}[h!]
@@ -101,7 +107,7 @@ Germany          & 0.24             \\ \hline
 USA              & 0.99             \\ \hline
 \end{tabular}
 \end{table}
-For the time series of Switzerland, USA and Germany the P-value is greater than 0.05, meaning these time series are not stationary. Therefore we try to create stationarity by using the first differences.
+For the time series of Switzerland, USA and Germany the P-value is greater than 0.05, meaning these time series are not stationary. Therefore we try to create stationarity by using the first differences. Since the $log(0)$ is not defined, we only use the \lstinline{diff()} function and  not the \lstinline{diff(log())} function.
 \begin{table}[h!]
 \centering
 \caption{P-Values after first Differences}
