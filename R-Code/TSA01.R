@@ -5,82 +5,10 @@ library(tseries)
 library(tidyverse)
 library(jsonlite)
 require(dplyr)
-
+library(vars)
 countries <-
   c("Switzerland", "Germany", "Italy", "China", "United States")
 
-### Covid Data from API
-drops <-
-  c("CountryCode", "Province", "City", "CityCode", "Lat", "Lon")
-
-switzerlandCovid <-
-  fromJSON("https://api.covid19api.com/total/country/switzerland/status/confirmed")
-switzerlandCovid <- switzerlandCovid %>%
-  mutate("New_Cases" = Cases - lag(Cases, default = Cases[1]))
-switzerlandCovid <- switzerlandCovid[,!(names(switzerlandCovid) %in% drops)]
-
-italyCovid <-
-  fromJSON("https://api.covid19api.com/total/country/italy/status/confirmed")
-italyCovid <- italyCovid %>%
-  mutate("New_Cases" = Cases - lag(Cases, default = Cases[1]))
-italyCovid <- italyCovid[,!(names(italyCovid) %in% drops)]
-
-germanyCovid <-
-  fromJSON("https://api.covid19api.com/total/country/germany/status/confirmed")
-germanyCovid <- germanyCovid %>%
-  mutate("New_Cases" = Cases - lag(Cases, default = Cases[1]))
-germanyCovid <- germanyCovid[,!(names(germanyCovid) %in% drops)]
-
-chinaCovid <-
-  fromJSON("https://api.covid19api.com/total/country/china/status/confirmed")
-chinaCovid <- chinaCovid %>%
-  mutate("New_Cases" = Cases - lag(Cases, default = Cases[1]))
-chinaCovid[1, "New_Cases"] <- 548
-chinaCovid <- chinaCovid[,!(names(chinaCovid) %in% drops)]
-
-usaCovid <-
-  fromJSON("https://api.covid19api.com/total/country/united-states/status/confirmed")
-usaCovid <- usaCovid %>%
-  mutate("New_Cases" = Cases - lag(Cases, default = Cases[1]))
-usaCovid[1, "New_Cases"] <- 1
-usaCovid <- usaCovid[,!(names(usaCovid) %in% drops)]
-
-#Create Timeseries
-chinaCovid$Date = as.Date(chinaCovid$Date, format = "%Y-%m-%d")
-italyCovid$Date = as.Date(italyCovid$Date, format = "%Y-%m-%d")
-switzerlandCovid$Date = as.Date(switzerlandCovid$Date, format = "%Y-%m-%d")
-germanyCovid$Date = as.Date(germanyCovid$Date, format = "%Y-%m-%d")
-usaCovid$Date = as.Date(usaCovid$Date, format = "%Y-%m-%d")
-
-dayOfYear = as.numeric(format(chinaCovid[1, 4], "%j"))
-chinaCovid =  ts(chinaCovid$Cases,
-                 start = c(2020, dayOfYear),
-                 frequency = 365)
-italyCovid = ts(italyCovid$Cases,
-                start = c(2020, dayOfYear),
-                frequency = 365)
-switzerlandCovid = ts(switzerlandCovid$Cases,
-                start = c(2020, dayOfYear),
-                frequency = 365)
-germanyCovid = ts(germanyCovid$Cases,
-                  start = c(2020, dayOfYear),
-                  frequency = 365)
-usaCovid = ts(usaCovid$Cases,
-              start = c(2020, dayOfYear),
-              frequency = 365)
-
-# Error: time series has no or less than 2 periods -> changed time series frequency to 12 (monthly)
-chinaCovidDecomposed <- decompose(chinaCovid)
-italyCovidDecomposed <- decompose(italyCovid)
-switzerlandCovidDecomposed <- decompose(switzerlandCovid)
-germanyCovidDecomposed <- decompose(germanyCovid)
-usaCovidDecomposed <- decompose(usaCovid)
-
-plot(chinaCovidDecomposed)
-plot(italyCovidDecomposed)
-plot(switzerlandCovidDecomposed)
-plot(germanyCovidDecomposed)
-plot(usaCovidDecomposed)
 
 ### Covid Data from CSV
 covid_data <- read_csv("cowid-covid-data.csv")
@@ -117,6 +45,7 @@ usaCovidCSV = usaCovidCSV[-1, ]
 
 
 
+
 #Create Timeseries
 chinaCovidCSV$date = as.Date(chinaCovidCSV$date, format = "%Y-%m-%d")
 italyCovidCSV$date = as.Date(italyCovidCSV$date, format = "%Y-%m-%d")
@@ -124,71 +53,138 @@ switzerlandCovidCSV$date = as.Date(switzerlandCovidCSV$date, format = "%Y-%m-%d"
 germanyCovidCSV$date = as.Date(germanyCovidCSV$date, format = "%Y-%m-%d")
 usaCovidCSV$date = as.Date(usaCovidCSV$date, format = "%Y-%m-%d")
 
-dayOfYear = as.numeric(format(chinaCovidCSV[1, 4], "%j"))
-chinaCovidCSVCases =  ts(chinaCovidCSV$total_cases,
-                         start = c(2020, chinaCovidCSV$date),
+
+chinaCovidCases =  ts(chinaCovidCSV$total_cases,
+                         start = c(2020, 23),
                          frequency = 365)
-italyCovidCSVCases = ts(
+italyCovidCases = ts(
   italyCovidCSV$total_cases,
-  start = c(2020, italyCovidCSV$date),
+  start = c(2020, 23),
   frequency = 365
 )
-switzerlandCovidCSVCases = ts(
+switzerlandCovidCases = ts(
   switzerlandCovidCSV$total_cases,
-  start = c(2020, switzerlandCovidCSV$date),
+  start = c(2020, 23),
   frequency = 365
 )
-germanyCovidCSVCases = ts(
+germanyCovidCases = ts(
   germanyCovidCSV$total_cases,
-  start = c(2020, germanyCovidCSV$date),
+  start = c(2020, 23),
   frequency = 365
 )
-usaCovidCSVCases = ts(usaCovidCSV$total_cases,
-                      start = c(2020, usaCovidCSV$date),
+usaCovidCases = ts(usaCovidCSV$total_cases,
+                      start = c(2020, 23),
                       frequency = 365)
-italyCovidCSVDeath = ts(
+italyCovidDeath = ts(
   italyCovidCSV$total_deaths,
-  start = c(2020, italyCovidCSV$date),
+  start = c(2020, 23),
   frequency = 365
 )
-switzerlandCovidCSVDeath = ts(
+switzerlandCovidDeath = ts(
   switzerlandCovidCSV$total_deaths,
-  start = c(2020, switzerlandCovidCSV$date),
+  start = c(2020, 23),
   frequency = 365
 )
-germanyCovidCSVDeath = ts(
+germanyCovidDeath = ts(
   germanyCovidCSV$total_deaths,
-  start = c(2020, germanyCovidCSV$date),
+  start = c(2020, 23),
   frequency = 365
 )
-usaCovidCSVDeath = ts(usaCovidCSV$total_deaths,
-                      start = c(2020, usaCovidCSV$date),
+usaCovidDeath = ts(usaCovidCSV$total_deaths,
+                      start = c(2020, 23),
+                      frequency = 365)
+chinaCovidDeath = ts(chinaCovidCSV$total_deaths,
+                      start = c(2020, 23),
                       frequency = 365)
 
-switzerlandCovidCSVCases[!is.finite(switzerlandCovidCSVCases)] <- 0
-germanyCovidCSVCases[!is.finite(germanyCovidCSVCases)] <- 0
-italyCovidCSVCases[!is.finite(italyCovidCSVCases)] <- 0
-chinaCovidCSVCases[!is.finite(chinaCovidCSVCases)] <- 0
-usaCovidCSVCases[!is.finite(usaCovidCSVCases)] <- 0
+switzerlandCovidCases[!is.finite(switzerlandCovidCases)] <- 0
+germanyCovidCases[!is.finite(germanyCovidCases)] <- 0
+italyCovidCases[!is.finite(italyCovidCases)] <- 0
+chinaCovidCases[!is.finite(chinaCovidCases)] <- 0
+usaCovidCases[!is.finite(usaCovidCases)] <- 0
 
-switzerlandCovidCSVDeath[!is.finite(switzerlandCovidCSVDeath)] <- 0
-germanyCovidCSVDeath[!is.finite(germanyCovidCSVDeath)] <- 0
-italyCovidCSVDeath[!is.finite(italyCovidCSVDeath)] <- 0
-chinaCovidCSVDeath[!is.finite(chinaCovidCSVDeath)] <- 0
-usaCovidCSVDeath[!is.finite(usaCovidCSVDeath)] <- 0
+switzerlandCovidDeath[!is.finite(switzerlandCovidDeath)] <- 0
+germanyCovidDeath[!is.finite(germanyCovidDeath)] <- 0
+italyCovidDeath[!is.finite(italyCovidDeath)] <- 0
+chinaCovidDeath[!is.finite(chinaCovidDeath)] <- 0
+usaCovidDeath[!is.finite(usaCovidDeath)] <- 0
 
 # Error: time series has no or less than 2 periods -> changed time series frequency to 12 (monthly)
-chinaCovidCSVDecomposed <- decompose(chinaCovidCSVCases)
-italyCovidCSVDecomposed <- decompose(italyCovidCSVCases)
-switzerlandCovidCSVDecomposed <- decompose(switzerlandCovidCSVCases)
-germanyCovidCSVDecomposed <- decompose(germanyCovidCSVCases)
-usaCovidCSVDecomposed <- decompose(usaCovidCSVCases)
+chinaCovidDecomposed <- decompose(chinaCovidCases)
+italyCovidDecomposed <- decompose(italyCovidCases)
+switzerlandCovidDecomposed <- decompose(switzerlandCovidCases)
+germanyCovidDecomposed <- decompose(germanyCovidCases)
+usaCovidDecomposed <- decompose(usaCovidCases)
 
-plot(chinaCovidCSVDecomposed)
-plot(italyCovidCSVDecomposed)
-plot(switzerlandCovidCSVDecomposed)
-plot(germanyCovidCSVDecomposed)
-plot(usaCovidCSVDecomposed)
+plot(chinaCovidDecomposed)
+plot(italyCovidDecomposed)
+plot(switzerlandCovidDecomposed)
+plot(germanyCovidDecomposed)
+plot(usaCovidDecomposed)
+
+
+
+# Test if Timeseries are stationary
+adf.test(chinaCovidCases)  # p-value = 0.01 -> stationary
+adf.test(italyCovidCases) # p-value = 0.01 -> stationary
+adf.test(switzerlandCovidCases) # p-value = 0.99 -> non stationary
+adf.test(germanyCovidCases) # p-value = 0.9649 -> non stationary
+adf.test(usaCovidCases) # p-value = 0.99 -> non stationary
+
+switzerlandCovid_return <- diff(switzerlandCovidCases)
+adf.test(switzerlandCovid_return) # p-value = 0.9489
+
+switzerlandCovid_return2 <- diff(switzerlandCovid_return)
+adf.test(switzerlandCovid_return2) # p-value = 0.01
+
+germanyCovid_return <- diff(germanyCovidCases)
+adf.test(germanyCovid_return) # p-value = 0.99
+
+germanyCovid_return2 <- diff(germanyCovid_return)
+adf.test(germanyCovid_return2) # p-value = 0.01
+
+usaCovid_return <- diff(usaCovidCases)
+adf.test(usaCovid_return) # p-value = 0.99
+
+usaCovid_return2 <- diff(usaCovid_return)
+adf.test(usaCovid_return2) # p-value = 0.01
+
+# Remove the first 2 elements of the timeseries usacovid has been shortened by 2 elements
+switzerlandCovidCases = switzerlandCovid_return2
+chinaCovidCases= chinaCovidCases[-1]
+chinaCovidCases= chinaCovidCases[-1]
+italyCovidCases = italyCovidCases[-1]
+italyCovidCases = italyCovidCases[-1]
+germanyCovidCases = germanyCovid_return2
+usaCovidCases = usaCovid_return2
+
+
+adf.test(chinaCovidDeath)  # p-value = 0.01191 -> stationary
+adf.test(italyCovidDeath) # p-value = 0.01 -> stationary
+adf.test(switzerlandCovidDeath) # p-value = 0.99 -> non stationary
+adf.test(germanyCovidDeath) # p-value = 0.2751 -> non stationary
+adf.test(usaCovidDeath) # p-value = 0.01 -> stationary
+
+switzerlandCovid_diff <- diff(switzerlandCovidDeath)
+adf.test(switzerlandCovid_diff) # p-value = 0.99
+
+switzerlandCovid_diff2 <- diff(switzerlandCovid_diff)
+adf.test(switzerlandCovid_diff2) # p-value = 0.01
+
+germanyCovidDeath_diff <- diff(germanyCovidDeath)
+adf.test(germanyCovidDeath_diff) # p-value = 0.99
+
+germanyCovidDeath_diff2 <- diff(germanyCovidDeath_diff)
+adf.test(germanyCovidDeath_diff2) # p-value = 0.01
+
+switzerlandCovidDeath = switzerlandCovid_diff2
+chinaCovidDeath= chinaCovidDeath[-1]
+chinaCovidDeath= chinaCovidDeath[-1]
+italyCovidDeath = italyCovidDeath[-1]
+italyCovidDeath = italyCovidDeath[-1]
+germanyCovidDeath = germanyCovidDeath_diff2
+usaCovidDeath = usaCovidDeath[-1]
+usaCovidDeath = usaCovidDeath[-1]
 
 
 ### FINANCE PART
@@ -240,27 +236,27 @@ for (ticker in 1:ncol(finance_data)) {
 # WHY ARE Finance Timeseries ONLY [1:227] long and covid data [1:316]
 chinaFinance = ts(
   finance_data$X000001.SS.Adjusted,
-  start = c(2020, dayOfYear),
+  start = c(2020, 23),
   frequency = 365
 )
 switzerlandFinance = ts(
   finance_data$SSMI.Adjusted,
-  start = c(2020, dayOfYear),
+  start = c(2020, 23),
   frequency = 365
 )
 germanyFinance = ts(
   finance_data$DB1.DE.Adjusted,
-  start = c(2020, dayOfYear),
+  start = c(2020, 23),
   frequency = 365
 )
 italyFinance = ts(
   finance_data$FTSEMIB.MI.Adjusted,
-  start = c(2020, dayOfYear),
+  start = c(2020, 23),
   frequency = 365
 )
 usaFinance = ts(
   finance_data$DJI.Adjusted,
-  start = c(2020, dayOfYear),
+  start = c(2020, 23),
   frequency = 365
 )
 
@@ -271,50 +267,57 @@ germanyFinanceDecomposed <- decompose(germanyFinance)
 italyFinanceDecomposed <- decompose(italyFinance)
 usaFinanceDecomposed <- decompose(usaFinance)
 
+#Check if timeseries are stationary
+adf.test(chinaFinance) # p-value = 0.3271
+adf.test(italyFinance) # p-value = 0.409
+adf.test(switzerlandFinance) # p-value = 0.2596
+adf.test(germanyFinance) # p-value = 0.5447
+adf.test(usaFinance) # p-value = 0.3754
 
-# Test if Timeseries are stationary
-adf.test(chinaCovidCSVCases)  # p-value = 0.01 -> stationary
-adf.test(italyCovidCSVCases) # p-value = 0.01 -> stationary
-adf.test(switzerlandCovidCSVCases) # p-value = 0.99 -> non stationary
-adf.test(germanyCovidCSVCases) # p-value = 0.9649 -> non stationary
-adf.test(usaCovidCSVCases) # p-value = 0.99 -> non stationary
-
-switzerlandCovid_return <- diff(switzerlandCovid)
-adf.test(switzerlandCovid_return) # p-value = 0.9533
-
-switzerlandCovid_return2 <- diff(switzerlandCovid_return)
-adf.test(switzerlandCovid_return2) # p-value = 0.01
-
-germanyCovid_return <- diff(germanyCovid)
-adf.test(germanyCovid_return) # p-value = 0.99
-
-germanyCovid_return2 <- diff(germanyCovid_return)
-adf.test(germanyCovid_return2) # p-value = 0.01
-
-usaCovid_return <- diff(usaCovid)
-adf.test(usaCovid_return) # p-value = 0.99
-
-usaCovid_return2 <- diff(usaCovid_return)
-adf.test(usaCovid_return2) # p-value = 0.01
-
-# Remove the first 2 elements of the timeseries usacovid has been shortened by 2 elements
-switzerlandCovid = switzerlandCovid_return2
-chinaCovid = chinaCovid[-1]
-chinaCovid = chinaCovid[-1]
-italyCovid = italyCovid[-1]
-italyCovid = italyCovid[-1]
-germanyCovid = germanyCovid_return2
-usaCovid = usaCovid_return2
-
-adf.test(chinaFinance) # p-value = 0.01
-adf.test(italyFinance) # p-value = 0.39
-adf.test(switzerlandFinance) # p-value = 0.045
-adf.test(germanyFinance) # p-value = 0.042
-adf.test(usaFinance) # p-value = 0.01
+adf.test(diff(log(chinaFinance))) # p-value = 0.01
+adf.test(diff(log(italyFinance))) # p-value = 0.01
+adf.test(diff(log(switzerlandFinance))) # p-value = 0.01
+adf.test(diff(log(germanyFinance))) # p-value = 0.01
+adf.test(diff(log(usaFinance)))# p-value = 0.01
 
 
+chinaFinance = diff(log(chinaFinance))[-1]
+italyFinance = diff(log(italyFinance))[-1]
+switzerlandFinance = diff(log(switzerlandFinance))[-1]
+germanyFinance = diff(log(germanyFinance))[-1]
+usaFinance = diff(log(usaFinance))[-1]
 
 
-## TODO:
-#  - Josh: Time Series, decompose, returns
-#  - Anna: stationarity, stationarity series
+###VAR Model and Causality
+
+china_var <- VAR(cbind (chinaFinance, chinaCovidCases,chinaCovidDeath),type="const",ic="AIC")
+summary(china_var)
+causality(china_var, cause = "chinaCovidCases")
+causality(china_var, cause = "chinaCovidDeath")
+causality(china_var, cause = "chinaFinance")
+
+italy_var <- VAR(cbind (italyFinance, italyCovidCases,italyCovidDeath),type="const",ic="AIC")
+summary(italy_var)
+causality(italy_var, cause = "italyCovidCases")
+causality(italy_var, cause = "italyCovidDeath")
+causality(italy_var, cause = "italyFinance")
+
+switzerland_var <- VAR(cbind (switzerlandFinance, switzerlandCovidCases,switzerlandCovidDeath),type="const",ic="AIC")
+summary(switzerland_var)
+causality(switzerland_var, cause = "switzerlandCovidCases")
+causality(switzerland_var, cause = "switzerlandCovidDeath")
+causality(switzerland_var, cause = "switzerlandFinance")
+
+germany_var <- VAR(cbind (germanyFinance, germanyCovidCases,germanyCovidDeath),type="const",ic="AIC")
+summary(germany_var)
+causality(germany_var, cause = "germanyCovidCases")
+causality(germany_var, cause = "germanyCovidDeath")
+causality(germany_var, cause = "germanyFinance")
+
+usa_var <- VAR(cbind (usaFinance, usaCovidCases,usaCovidDeath),type="const",ic="AIC")
+summary(usa_var)
+causality(usa_var, cause = "usaCovidCases")
+causality(usa_var, cause = "usaCovidDeath")
+causality(usa_var, cause = "usaFinance")
+
+
