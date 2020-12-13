@@ -26,22 +26,22 @@ colToKeep <-
 
 covid_data = subset(covid_data, select = colToKeep)
 covid_data_filtered <-
-  covid_data[covid_data$location %in% countries,]
+  covid_data[covid_data$location %in% countries, ]
 
 switzerlandCovidCSV <-
-  covid_data_filtered[covid_data_filtered$location == "Switzerland",]
+  covid_data_filtered[covid_data_filtered$location == "Switzerland", ]
 germanyCovidCSV <-
-  covid_data_filtered[covid_data_filtered$location == "Germany",]
+  covid_data_filtered[covid_data_filtered$location == "Germany", ]
 italyCovidCSV <-
-  covid_data_filtered[covid_data_filtered$location == "Italy",]
+  covid_data_filtered[covid_data_filtered$location == "Italy", ]
 chinaCovidCSV <-
-  covid_data_filtered[covid_data_filtered$location == "China",]
+  covid_data_filtered[covid_data_filtered$location == "China", ]
 usaCovidCSV <-
-  covid_data_filtered[covid_data_filtered$location == "United States",]
+  covid_data_filtered[covid_data_filtered$location == "United States", ]
 
 # For some reason China and USA have recorded data one day before the others
-chinaCovidCSV = chinaCovidCSV[-1,]
-usaCovidCSV = usaCovidCSV[-1,]
+chinaCovidCSV = chinaCovidCSV[-1, ]
+usaCovidCSV = usaCovidCSV[-1, ]
 
 
 
@@ -256,48 +256,91 @@ usaFinanceDecomposed <- decompose(usaFinance)
 dates_vlineChina <- as.Date(c("2020-01-23"))
 dates_vlineChina <- which(finance_data$date %in% dates_vlineChina)
 chinaFinancePlot <-
-  ggplot(finance_data, aes(date, X000001.SS.Adjusted)) + 
-  geom_line() + 
-  geom_vline(xintercept = as.numeric(finance_data$date[dates_vlineChina]), linetype = 1, col="red")
+  ggplot(finance_data, aes(date, X000001.SS.Adjusted)) +
+  geom_line() +
+  geom_vline(
+    xintercept = as.numeric(finance_data$date[dates_vlineChina]),
+    linetype = 1,
+    col = "red"
+  ) + ggtitle("China stock market and first confirmed case") + xlab("Date") + ylab("Stock Market")
 
 # Switzerland
 dates_vlineSwitzerland <- as.Date(c("2020-02-25"))
-dates_vlineSwitzerland <- which(finance_data$date %in% dates_vlineSwitzerland)
+dates_vlineSwitzerland <-
+  which(finance_data$date %in% dates_vlineSwitzerland)
 switzerlandFinancePlot <-
-  ggplot(finance_data, aes(date, SSMI.Adjusted)) + 
-  geom_line() + 
-  geom_vline(xintercept = as.numeric(finance_data$date[dates_vlineSwitzerland]), linetype = 1, col="red")
+  ggplot(finance_data, aes(date, SSMI.Adjusted)) +
+  geom_line() +
+  geom_vline(
+    xintercept = as.numeric(finance_data$date[dates_vlineSwitzerland]),
+    linetype = 1,
+    col = "red"
+  ) + ggtitle("Switzerland stock market and first confirmed case") + xlab("Date") + ylab("Stock Market")
+
 
 # Germany
 dates_vlineGermany <- as.Date(c("2020-01-27"))
-dates_vlineGermany <- which(finance_data$date %in% dates_vlineGermany)
+dates_vlineGermany <-
+  which(finance_data$date %in% dates_vlineGermany)
 germanyFinancePlot <-
-  ggplot(finance_data, aes(date, DB1.DE.Adjusted)) + 
-  geom_line() + 
-  geom_vline(xintercept = as.numeric(finance_data$date[dates_vlineGermany]), linetype = 1, col="red")
+  ggplot(finance_data, aes(date, DB1.DE.Adjusted)) +
+  geom_line() +
+  geom_vline(
+    xintercept = as.numeric(finance_data$date[dates_vlineGermany]),
+    linetype = 1,
+    col = "red"
+  ) + ggtitle("Germany stock market and first confirmed case") + xlab("Date") + ylab("Stock Market")
 
 # Italy
 dates_vlineItaly <- as.Date(c("2020-01-31"))
 dates_vlineItaly <- which(finance_data$date %in% dates_vlineItaly)
 italyFinancePlot <-
-  ggplot(finance_data, aes(date, FTSEMIB.MI.Adjusted)) + 
-  geom_line() + 
-  geom_vline(xintercept = as.numeric(finance_data$date[dates_vlineItaly]), linetype = 1, col="red")
+  ggplot(finance_data, aes(date, FTSEMIB.MI.Adjusted)) +
+  geom_line() +
+  geom_vline(
+    xintercept = as.numeric(finance_data$date[dates_vlineItaly]),
+    linetype = 1,
+    col = "red"
+  ) + ggtitle("Italy stock market and first confirmed case") + xlab("Date") + ylab("Stock Market")
 
 # USA
 dates_vlineUSA <- as.Date(c("2020-01-27"))
 dates_vlineUSA <- which(finance_data$date %in% dates_vlineUSA)
 usaFinancePlot <-
-  ggplot(finance_data, aes(date, DJI.Adjusted)) + 
-  geom_line() + 
-  geom_vline(xintercept = as.numeric(finance_data$date[dates_vlineUSA]), linetype = 1, col="red")
+  ggplot(finance_data, aes(date, DJI.Adjusted)) +
+  geom_line() +
+  geom_vline(
+    xintercept = as.numeric(finance_data$date[dates_vlineUSA]),
+    linetype = 1,
+    col = "red"
+  ) + ggtitle("United States stock market and first confirmed case") + xlab("Date") + ylab("Stock Market")
 
-chinaFinancePlot + ggtitle("Test Title", xlab("Date"), ylab("Stock Market"))
+chinaFinancePlot
+switzerlandFinancePlot
+germanyFinancePlot
+italyFinancePlot
+usaFinancePlot
+
+# Export plots for documentation
+png(filename = "plots/chinaFinance.png")
+plot(chinaFinancePlot)
+dev.off()
+
+png(filename = "plots/switzerlandFinance.png")
 plot(switzerlandFinancePlot)
-plot(germanyFinancePlot)
-plot(italyFinancePlot)
-plot(usaFinancePlot)
+dev.off()
 
+png(filename = "plots/chinaFinance.png")
+plot(chinaFinancePlot)
+dev.off()
+
+png(filename = "plots/chinaFinance.png")
+plot(chinaFinancePlot)
+dev.off()
+
+png(filename = "plots/chinaFinance.png")
+plot(chinaFinancePlot)
+dev.off()
 
 #Check if timeseries are stationary
 adf.test(chinaFinance) # p-value = 0.3271
