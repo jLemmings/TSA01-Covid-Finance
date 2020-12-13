@@ -77,9 +77,15 @@
 % --------------------
 \section{Introduction}
 % --------------------
+COVID-19 currently dictates our lives and is one topic which is highly discussed. It is proven, that more people have died during this pandemic than usual (\cite{owidcoronavirus}). In this short paper we want to analyse the affect of COVID-19 on the major financial markets of following five countries: Switzerland, Germany, Italy, United States and China.
+
 % --------------------
 \section{Literature Review}
 % --------------------
+The author of the "Stock markets reaction to COVID-19: Cases or fatalities?" article (\cite{stock-covid-reaction}) has discovered that the stock markets responded negatively to the increase of confirmed COVID-19 cases. An increase in confirmed COVID-19 cases affects stock markets in a light manner. During the beginning of the pandemic stock markets have reacted strongly due to uncertainty.
+
+
+
 % --------------------
 \section{Methods}
 % --------------------
@@ -134,7 +140,13 @@ USA              & 0.99             \\ \hline
 
 \subsection{VAR-Modell and Granger Causality}
 
-
+$$
+\begin{array}{l}
+Y_{t}=a_{1}+\beta_{11} Y_{t-1}+\beta_{12} X_{t-1}+\beta_{13} Z_{t-1}+\epsilon_{1, t} \\
+X_{t}=a_{2}+\beta_{21} X_{t-1}+\beta_{22} Y_{t-1}++\beta_{23} Z_{t-1}\epsilon_{2, t}\\
+Z_{t}=a_{1}+\beta_{31} Z_{t-1}+\beta_{32} X_{t-1}++\beta_{33} Y_{t-1}\epsilon_{3, t}
+\end{array}
+$$
 % --------------------
 \section{Results}
 % --------------------
