@@ -6,6 +6,9 @@ library(jsonlite)
 require(dplyr)
 library(vars)
 library(ggplot2)
+library(scales)
+library(reshape2)
+
 countries <-
   c("Switzerland", "Germany", "Italy", "China", "United States")
 
@@ -69,6 +72,8 @@ germanyCovidCases = ts(germanyCovidCSV$total_cases,
 usaCovidCases = ts(usaCovidCSV$total_cases,
                    start = c(2020, 23),
                    frequency = 365)
+
+
 italyCovidDeath = ts(italyCovidCSV$total_deaths,
                      start = c(2020, 23),
                      frequency = 365)
@@ -86,6 +91,126 @@ usaCovidDeath = ts(usaCovidCSV$total_deaths,
 chinaCovidDeath = ts(chinaCovidCSV$total_deaths,
                      start = c(2020, 23),
                      frequency = 365)
+
+# Combine data for COVID-19 cases and deaths in Switzerland
+switzerlandCovidCSV.new_cases <- data.frame(switzerlandCovidCSV$date, switzerlandCovidCSV$new_cases) 
+colnames(switzerlandCovidCSV.new_cases)[2] <- "count"
+switzerlandCovidCSV.new_cases$data <- "new_cases"
+
+switzerlandCovidCSV.total_cases <- data.frame(switzerlandCovidCSV$date, switzerlandCovidCSV$total_cases) 
+colnames(switzerlandCovidCSV.total_cases)[2] <- "count"
+switzerlandCovidCSV.total_cases$data <- "total_cases"
+
+switzerlandCovidCSV.total_deaths <- data.frame(switzerlandCovidCSV$date, switzerlandCovidCSV$total_deaths) 
+colnames(switzerlandCovidCSV.total_deaths)[2] <- "count"
+switzerlandCovidCSV.total_deaths$data <- "total_deaths"
+
+switzerlandCovidCSV.combined <- rbind.data.frame(switzerlandCovidCSV.new_cases, switzerlandCovidCSV.total_cases, switzerlandCovidCSV.total_deaths)
+switzerlandCovidCSV.combined
+
+switzerlandCovidPlot <- ggplot(switzerlandCovidCSV.combined, aes(x = switzerlandCovidCSV.date, y = count))+
+  geom_line(aes(colour = data), size = 1) + xlab("Date") + ylab("Count") + labs(color = "Data")
+
+switzerlandCovidPlot
+png(filename = "plots/switzerlandCovid.png")
+plot(switzerlandCovidPlot)
+dev.off()
+
+# Combine data for COVID-19 cases and deaths in Germany
+germanyCovidCSV.new_cases <- data.frame(germanyCovidCSV$date, germanyCovidCSV$new_cases) 
+colnames(germanyCovidCSV.new_cases)[2] <- "count"
+germanyCovidCSV.new_cases$data <- "new_cases"
+
+germanyCovidCSV.total_cases <- data.frame(germanyCovidCSV$date, germanyCovidCSV$total_cases) 
+colnames(germanyCovidCSV.total_cases)[2] <- "count"
+germanyCovidCSV.total_cases$data <- "total_cases"
+
+germanyCovidCSV.total_deaths <- data.frame(germanyCovidCSV$date, germanyCovidCSV$total_deaths) 
+colnames(germanyCovidCSV.total_deaths)[2] <- "count"
+germanyCovidCSV.total_deaths$data <- "total_deaths"
+
+germanyCovidCSV.combined <- rbind.data.frame(germanyCovidCSV.new_cases, germanyCovidCSV.total_cases, germanyCovidCSV.total_deaths)
+germanyCovidCSV.combined
+
+germanyCovidPlot <- ggplot(germanyCovidCSV.combined, aes(x = germanyCovidCSV.date, y = count))+
+  geom_line(aes(colour = data), size = 1) + xlab("Date") + ylab("Count") + labs(color = "Data")
+
+germanyCovidPlot
+png(filename = "plots/germanyCovid.png")
+plot(germanyCovidPlot)
+dev.off()
+
+# Combine data for COVID-19 cases and deaths in Italy
+italyCovidCSV.new_cases <- data.frame(italyCovidCSV$date, italyCovidCSV$new_cases) 
+colnames(italyCovidCSV.new_cases)[2] <- "count"
+italyCovidCSV.new_cases$data <- "new_cases"
+
+italyCovidCSV.total_cases <- data.frame(italyCovidCSV$date, italyCovidCSV$total_cases) 
+colnames(italyCovidCSV.total_cases)[2] <- "count"
+italyCovidCSV.total_cases$data <- "total_cases"
+
+italyCovidCSV.total_deaths <- data.frame(italyCovidCSV$date, italyCovidCSV$total_deaths) 
+colnames(italyCovidCSV.total_deaths)[2] <- "count"
+italyCovidCSV.total_deaths$data <- "total_deaths"
+
+italyCovidCSV.combined <- rbind.data.frame(italyCovidCSV.new_cases, italyCovidCSV.total_cases, italyCovidCSV.total_deaths)
+italyCovidCSV.combined
+
+italyCovidPlot <- ggplot(italyCovidCSV.combined, aes(x = italyCovidCSV.date, y = count))+
+  geom_line(aes(colour = data), size = 1) + xlab("Date") + ylab("Count") + labs(color = "Data")
+
+italyCovidPlot
+png(filename = "plots/italyCovid.png")
+plot(italyCovidPlot)
+dev.off()
+
+# Combine data for COVID-19 cases and deaths in China
+chinaCovidCSV.new_cases <- data.frame(chinaCovidCSV$date, chinaCovidCSV$new_cases) 
+colnames(chinaCovidCSV.new_cases)[2] <- "count"
+chinaCovidCSV.new_cases$data <- "new_cases"
+
+chinaCovidCSV.total_cases <- data.frame(chinaCovidCSV$date, chinaCovidCSV$total_cases) 
+colnames(chinaCovidCSV.total_cases)[2] <- "count"
+chinaCovidCSV.total_cases$data <- "total_cases"
+
+chinaCovidCSV.total_deaths <- data.frame(chinaCovidCSV$date, chinaCovidCSV$total_deaths) 
+colnames(chinaCovidCSV.total_deaths)[2] <- "count"
+chinaCovidCSV.total_deaths$data <- "total_deaths"
+
+chinaCovidCSV.combined <- rbind.data.frame(chinaCovidCSV.new_cases, chinaCovidCSV.total_cases, chinaCovidCSV.total_deaths)
+chinaCovidCSV.combined
+
+chinaCovidPlot <- ggplot(chinaCovidCSV.combined, aes(x = chinaCovidCSV.date, y = count))+
+  geom_line(aes(colour = data), size = 1) + xlab("Date") + ylab("Count") + labs(color = "Data")
+
+chinaCovidPlot
+png(filename = "plots/chinaCovid.png")
+plot(chinaCovidPlot)
+dev.off()
+
+# Combine data for COVID-19 cases and deaths in USA
+usaCovidCSV.new_cases <- data.frame(usaCovidCSV$date, usaCovidCSV$new_cases) 
+colnames(usaCovidCSV.new_cases)[2] <- "count"
+usaCovidCSV.new_cases$data <- "new_cases"
+
+usaCovidCSV.total_cases <- data.frame(usaCovidCSV$date, usaCovidCSV$total_cases) 
+colnames(usaCovidCSV.total_cases)[2] <- "count"
+usaCovidCSV.total_cases$data <- "total_cases"
+
+usaCovidCSV.total_deaths <- data.frame(usaCovidCSV$date, usaCovidCSV$total_deaths) 
+colnames(usaCovidCSV.total_deaths)[2] <- "count"
+usaCovidCSV.total_deaths$data <- "total_deaths"
+
+usaCovidCSV.combined <- rbind.data.frame(usaCovidCSV.new_cases, usaCovidCSV.total_cases, usaCovidCSV.total_deaths)
+usaCovidCSV.combined
+
+usaCovidPlot <- ggplot(usaCovidCSV.combined, aes(x = usaCovidCSV.date, y = count))+
+  geom_line(aes(colour = data), size = 1) + xlab("Date") + ylab("Count") + labs(color = "Data")
+
+usaCovidPlot
+png(filename = "plots/usaCovid.png")
+plot(usaCovidPlot)
+dev.off()
 
 switzerlandCovidCases[!is.finite(switzerlandCovidCases)] <- 0
 germanyCovidCases[!is.finite(germanyCovidCases)] <- 0
