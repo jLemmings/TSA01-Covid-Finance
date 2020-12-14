@@ -89,9 +89,19 @@ The author of the "Stock markets reaction to COVID-19: Cases or fatalities?" art
 % --------------------
 \section{Methods}
 % --------------------
-In order to investigate a causality between the corona case numbers and financial market data, the first step is to prepare the data so that they are comparable with each other. After cleansing and preparing the data, the "Augmented Dickey-Fuller Test" is used to check whether the time series are stationary. If the time series are not stationary, the time series are modified using the \lstinline{diff(log())} method (). This procedure is repeated until the "Dickey-Fuller Test" shows that the time series are stationary. Then, the stationary time series are used for the calculation of vector autoreggressive models. Furthermore, Granger causality tests are performed.
+In order to investigate a causality between the corona case numbers and financial market data, the first step is to prepare the data so that they are comparable with each other. After cleansing and preparing the data, the "Augmented Dickey-Fuller Test" is used to check whether the time series are stationary. If the time series are not stationary, the time series are modified using the \lstinline{diff(log())} method (). This procedure is repeated until the "Dickey-Fuller Test" shows that the time series are stationary. Then, the stationary time series are used for the calculation of vector autoreggressive models (VAR models). Furthermore, Granger causality tests are performed.
 
 \subsection{Descriptive Analysis: Visualization, data preparation and decomposition of time series}
+
+\begin{figure}[!htb]
+\includegraphics[width=65mm]{R-Code/plots/switzerlandFinance.png} \\
+Switzerland
+\caption{caption}
+\end{figure}
+
+
+
+
 \subsubsection{Datapreparation: Returns}
 In the financial sector, in addition to the absolute level of a time series, its growth rates/returns are often of interest.
 Since continuous growth rates/returns are additive due to logarithmizing and more closely match the normal distribution, they are often preferred to discrete returns in time series analysis and econometrics in general. (\cite{PowerPoi49:online})
@@ -156,16 +166,41 @@ $$
 
 
 
+\section{Appendix}
 
 
+\begin{figure}[h!]
+\centering
+  \includegraphics[width=100mm]{R-Code/plots/chinaFinance.png} 
+  \caption{China stock market and first confirmed COVID-19 case}
+\end{figure}
+
+\begin{figure}[!h]
+\centering
+  \includegraphics[width=100mm]{R-Code/plots/germanyFinance.png}   
+  \caption{Germany stock market and first confirmed COVID-19 case}
+\end{figure}
+
+\begin{figure}[!h]
+\centering
+  \includegraphics[width=100mm]{R-Code/plots/italyFinance.png}  
+  \caption{Italy stock market and first confirmed COVID-19 case}
+\end{figure}
+
+\begin{figure}[!h]
+\centering
+  \includegraphics[width=100mm]{R-Code/plots/usaFinance.png} 
+    \caption{USA stock market and first confirmed COVID-19 case}
+\end{figure}
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % REFERENCES SECTION
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
 \medskip
-
+\newpage
 \bibliography{references.bib} 
 
 \end{document}
