@@ -262,7 +262,7 @@ chinaFinancePlot <-
     xintercept = as.numeric(finance_data$date[dates_vlineChina]),
     linetype = 1,
     col = "red"
-  ) + ggtitle("China stock market and first confirmed case") + xlab("Date") + ylab("Stock Market")
+  ) + xlab("Date") + ylab("Stock Market")
 
 # Switzerland
 dates_vlineSwitzerland <- as.Date(c("2020-02-25"))
@@ -275,7 +275,7 @@ switzerlandFinancePlot <-
     xintercept = as.numeric(finance_data$date[dates_vlineSwitzerland]),
     linetype = 1,
     col = "red"
-  ) + ggtitle("Switzerland stock market and first confirmed case") + xlab("Date") + ylab("Stock Market")
+  ) + xlab("Date") + ylab("Stock Market")
 
 
 # Germany
@@ -289,7 +289,7 @@ germanyFinancePlot <-
     xintercept = as.numeric(finance_data$date[dates_vlineGermany]),
     linetype = 1,
     col = "red"
-  ) + ggtitle("Germany stock market and first confirmed case") + xlab("Date") + ylab("Stock Market")
+  ) + xlab("Date") + ylab("Stock Market")
 
 # Italy
 dates_vlineItaly <- as.Date(c("2020-01-31"))
@@ -301,7 +301,7 @@ italyFinancePlot <-
     xintercept = as.numeric(finance_data$date[dates_vlineItaly]),
     linetype = 1,
     col = "red"
-  ) + ggtitle("Italy stock market and first confirmed case") + xlab("Date") + ylab("Stock Market")
+  ) + xlab("Date") + ylab("Stock Market")
 
 # USA
 dates_vlineUSA <- as.Date(c("2020-01-27"))
@@ -313,7 +313,7 @@ usaFinancePlot <-
     xintercept = as.numeric(finance_data$date[dates_vlineUSA]),
     linetype = 1,
     col = "red"
-  ) + ggtitle("United States stock market and first confirmed case") + xlab("Date") + ylab("Stock Market")
+  ) + xlab("Date") + ylab("Stock Market")
 
 chinaFinancePlot
 switzerlandFinancePlot
@@ -330,16 +330,16 @@ png(filename = "plots/switzerlandFinance.png")
 plot(switzerlandFinancePlot)
 dev.off()
 
-png(filename = "plots/chinaFinance.png")
-plot(chinaFinancePlot)
+png(filename = "plots/germanyFinance.png")
+plot(germanyFinancePlot)
 dev.off()
 
-png(filename = "plots/chinaFinance.png")
-plot(chinaFinancePlot)
+png(filename = "plots/italyFinance.png")
+plot(italyFinancePlot)
 dev.off()
 
-png(filename = "plots/chinaFinance.png")
-plot(chinaFinancePlot)
+png(filename = "plots/usaFinance.png")
+plot(usaFinancePlot)
 dev.off()
 
 #Check if timeseries are stationary
