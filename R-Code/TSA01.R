@@ -164,7 +164,7 @@ png(filename = "plots/italyCovid.png")
 plot(italyCovidPlot)
 dev.off()
 
-# Combine data for COVID-19 cases and deaths in China
+ # Combine data for COVID-19 cases and deaths in China
 chinaCovidCSV.new_cases <- data.frame(chinaCovidCSV$date, chinaCovidCSV$new_cases) 
 colnames(chinaCovidCSV.new_cases)[2] <- "count"
 chinaCovidCSV.new_cases$data <- "new_cases"
@@ -246,11 +246,11 @@ adf.test(switzerlandCovidCases) # p-value = 0.99 -> non stationary
 adf.test(germanyCovidCases) # p-value = 0.9649 -> non stationary
 adf.test(usaCovidCases) # p-value = 0.99 -> non stationary
 
-switzerlandCovid_return <- diff(switzerlandCovidCases)
-adf.test(switzerlandCovid_return) # p-value = 0.9489
+switzerlandCovid_first_diff <- diff(switzerlandCovidCases)
+adf.test(switzerlandCovid_first_diff) # p-value = 0.9489
 
-switzerlandCovid_return2 <- diff(switzerlandCovid_return)
-adf.test(switzerlandCovid_return2) # p-value = 0.01
+switzerlandCovid_second_diff <- diff(switzerlandCovid_first_diff)
+adf.test(switzerlandCovid_second_diff) # p-value = 0.01
 
 germanyCovid_return <- diff(germanyCovidCases)
 adf.test(germanyCovid_return) # p-value = 0.99
@@ -265,7 +265,7 @@ usaCovid_return2 <- diff(usaCovid_return)
 adf.test(usaCovid_return2) # p-value = 0.01
 
 # Remove the first 2 elements of the timeseries usacovid has been shortened by 2 elements
-switzerlandCovidCases = switzerlandCovid_return2
+switzerlandCovidCases = switzerlandCovid_second_diff
 chinaCovidCases = chinaCovidCases[-1]
 chinaCovidCases = chinaCovidCases[-1]
 italyCovidCases = italyCovidCases[-1]
@@ -348,7 +348,7 @@ for (ticker in 1:ncol(finance_data)) {
 }
 
 
-# WHY ARE Finance Timeseries ONLY [1:227] long and covid data [1:316]
+
 chinaFinance = ts(
   finance_data$X000001.SS.Adjusted,
   start = c(2020, 23),
@@ -474,18 +474,18 @@ adf.test(switzerlandFinance) # p-value = 0.2596
 adf.test(germanyFinance) # p-value = 0.5447
 adf.test(usaFinance) # p-value = 0.3754
 
-adf.test(diff(log(chinaFinance))) # p-value = 0.01
-adf.test(diff(log(italyFinance))) # p-value = 0.01
-adf.test(diff(log(switzerlandFinance))) # p-value = 0.01
-adf.test(diff(log(germanyFinance))) # p-value = 0.01
-adf.test(diff(log(usaFinance)))# p-value = 0.01
+adf.test(diff(chinaFinance)) # p-value = 0.01
+adf.test(diff(italyFinance)) # p-value = 0.01
+adf.test(diff(switzerlandFinance)) # p-value = 0.01
+adf.test(diff(germanyFinance)) # p-value = 0.01
+adf.test(diff(usaFinance))# p-value = 0.01
 
 
-chinaFinance = diff(log(chinaFinance))[-1]
-italyFinance = diff(log(italyFinance))[-1]
-switzerlandFinance = diff(log(switzerlandFinance))[-1]
-germanyFinance = diff(log(germanyFinance))[-1]
-usaFinance = diff(log(usaFinance))[-1]
+chinaFinance = diff(chinaFinance)[-1]
+italyFinance = diff(italyFinance)[-1]
+switzerlandFinance = diff(switzerlandFinance)[-1]
+germanyFinance = diff(germanyFinance)[-1]
+usaFinance = diff(usaFinance)[-1]
 
 
 ###VAR Model and Causality
@@ -497,9 +497,9 @@ china_var <-
     ic = "AIC"
   )
 summary(china_var)
-causality(china_var, cause = "chinaCovidCases")
-causality(china_var, cause = "chinaCovidDeath")
-causality(china_var, cause = "chinaFinance")
+causality(china_var, cause = "chinaCovidCases")["Granger"]
+causality(china_var, cause = "chinaCovidDeath")["Granger"]
+causality(china_var, cause = "chinaFinance")["Granger"]
 
 italy_var <-
   VAR(
@@ -508,9 +508,9 @@ italy_var <-
     ic = "AIC"
   )
 summary(italy_var)
-causality(italy_var, cause = "italyCovidCases")
-causality(italy_var, cause = "italyCovidDeath")
-causality(italy_var, cause = "italyFinance")
+causality(italy_var, cause = "italyCovidCases")["Granger"]
+causality(italy_var, cause = "italyCovidDeath")["Granger"]
+causality(italy_var, cause = "italyFinance")["Granger"]
 
 switzerland_var <-
   VAR(
@@ -523,9 +523,9 @@ switzerland_var <-
     ic = "AIC"
   )
 summary(switzerland_var)
-causality(switzerland_var, cause = "switzerlandCovidCases")
-causality(switzerland_var, cause = "switzerlandCovidDeath")
-causality(switzerland_var, cause = "switzerlandFinance")
+causality(switzerland_var, cause = "switzerlandCovidCases")["Granger"]
+causality(switzerland_var, cause = "switzerlandCovidDeath")["Granger"]
+causality(switzerland_var, cause = "switzerlandFinance")["Granger"]
 
 germany_var <-
   VAR(
@@ -534,15 +534,15 @@ germany_var <-
     ic = "AIC"
   )
 summary(germany_var)
-causality(germany_var, cause = "germanyCovidCases")
-causality(germany_var, cause = "germanyCovidDeath")
-causality(germany_var, cause = "germanyFinance")
+causality(germany_var, cause = "germanyCovidCases")["Granger"]
+causality(germany_var, cause = "germanyCovidDeath")["Granger"]
+causality(germany_var, cause = "germanyFinance")["Granger"]
 
 usa_var <-
   VAR(cbind (usaFinance, usaCovidCases, usaCovidDeath),
       type = "const",
       ic = "AIC")
 summary(usa_var)
-causality(usa_var, cause = "usaCovidCases")
-causality(usa_var, cause = "usaCovidDeath")
-causality(usa_var, cause = "usaFinance")
+causality(usa_var, cause = "usaCovidCases")["Granger"]
+causality(usa_var, cause = "usaCovidDeath")["Granger"]
+causality(usa_var, cause = "usaFinance")["Granger"]
