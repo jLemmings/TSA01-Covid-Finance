@@ -125,9 +125,10 @@ In order to investigate a causality between the corona case numbers and financia
 \subsection{Data collection and preprocessing}
 The "COVID19 API" has initially been used for the COVID-19 numbers to gather up-to-date data \cite{covid-api}. This would allow the script to be run in the future. The said API however does not provide COVID-19 death numbers on a daily basis. The platform called "Our World in Data" provides a free data set which includes new cases, total cases and total deaths of COVID-19. The manual process of download am preparation is the downside of this approach.
 
-All financial is collected using the \cite{yahoo-finance} API. The API provides up-to-date information and does not require any manual intervention.
+All financial data is collected using the \cite{yahoo-finance} API. The API provides up-to-date information and does not require any manual intervention.
 
 Stock markets are not open on each day. For example the SMI does not get traded on Saturdays, Sundays and other Swiss national holidays. In such occurrences we have chosen the value of the day before to remove NULL values. 
+Both the COVID-19 and the financial data cover the period from 1.2.2020 to 6.12.2020.
 
 
 \subsection{Descriptive Analysis: Visualization, data preparation and decomposition of time series}
@@ -220,8 +221,8 @@ $$
 \Delta SCD_{t}= 0.126 - 0.427 * \Delta SCD_{t-1} + 0.001 * \Delta SCC_{t-1} + 34.082  * \Delta SF_{t-1}
 \end{array}
 $$
-
-Next, a Granger-causality test is conducted. This should show whether there is a causal relationship between the values of the financial market, the Corona cases and the Corona deaths. The Granger-causality test states that at the 95\% confidence interval, Swiss COVID cases $\Delta SCC$ do significantly Granger-cause the Swiss Corona deaths $\Delta SCD$ and the Swiss financial market $\Delta SF$ but not the other ways round. Same applies to the Unites States. For the Countries Italy and China the Corona cases and the Corona deaths of the country granger-cause each other and the financial market. In Germany only the Corona deaths do significantly Granger-cause the other variables.
+(For more details see Figure \ref{fig:ChinaVAR},\ref{fig:ItalyVAR},\ref{fig:SwissVAR},\ref{fig:GermanyVAR} and \ref{fig:USAVAR}).
+Next, a Granger-causality test is conducted. This should show whether there is a causal relationship between the values of the financial market, the Corona cases and the Corona deaths. The Granger-causality test states that at the 95\% confidence interval, Swiss COVID cases $\Delta SCC$ do significantly Granger-cause the Swiss Corona deaths $\Delta SCD$ and the Swiss financial market $\Delta SF$ but not the other ways round. Same applies to the Unites States. For the Countries Italy and China the Corona cases and the Corona deaths of the country granger-cause each other and the financial market. In Germany only the Corona deaths do significantly Granger-cause the other variables. (See Figure \ref{fig:GrangerChina} - Figure \ref{fig:grangerUSA})
 
 % --------------------
 \section{Results}
@@ -291,6 +292,151 @@ Next, a Granger-causality test is conducted. This should show whether there is a
   \caption{United States COVID-19 data}
 \end{figure}
 
+%VAR Summary Plots
+
+\begin{figure}[htb]
+  \centering
+  \subfloat[Finance]{\includegraphics[width=0.5\textwidth]{R-Code/VAR Summaries/China VAR_F.png}\label{fig:f1}}
+  \hfill
+  \subfloat[Covid Cases]{\includegraphics[width=0.5\textwidth]{R-Code/VAR Summaries/China VAR_CC.png}\label{fig:f2}}
+  \hfill
+  \subfloat[Covid Deaths]{\includegraphics[width=0.5\textwidth]{R-Code/VAR Summaries/China VAR_CD.png}\label{fig:f3}}
+  \caption{China VAR Model}\label{fig:ChinaVAR}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering
+  \subfloat[Finance]{\includegraphics[width=0.5\textwidth]{R-Code/VAR Summaries/italy_var_f.png}\label{fig:f1}}
+  \hfill
+  \subfloat[Covid Cases]{\includegraphics[width=0.5\textwidth]{R-Code/VAR Summaries/italy_var_cc.png}\label{fig:f2}}
+  \hfill
+  \subfloat[Covid Deaths]{\includegraphics[width=0.5\textwidth]{R-Code/VAR Summaries/italy_var_cd.png}\label{fig:f3}}
+  \caption{Italy VAR Model}\label{fig:ItalyVAR}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering
+  \subfloat[Finance]{\includegraphics[width=0.5\textwidth]{R-Code/VAR Summaries/swiss_var_f.png}\label{fig:f1}}
+  \hfill
+  \subfloat[Covid Cases]{\includegraphics[width=0.5\textwidth]{R-Code/VAR Summaries/swiss_var_cc.png}\label{fig:f2}}
+  \hfill
+  \subfloat[Covid Deaths]{\includegraphics[width=0.5\textwidth]{R-Code/VAR Summaries/swiss_var_cd.png}\label{fig:f3}}
+  \caption{Switzerland VAR Model}\label{fig:SwissVAR}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering
+  \subfloat[Finance]{\includegraphics[width=0.5\textwidth]{R-Code/VAR Summaries/germany_var_f.png}\label{fig:f1}}
+  \hfill
+  \subfloat[Covid Cases]{\includegraphics[width=0.5\textwidth]{R-Code/VAR Summaries/germany_var_cc.png}\label{fig:f2}}
+  \hfill
+  \subfloat[Covid Deaths]{\includegraphics[width=0.5\textwidth]{R-Code/VAR Summaries/germany_var_cd.png}\label{fig:f3}}
+  \caption{Germany VAR Model}\label{fig:GermanyVAR}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering
+  \subfloat[Finance]{\includegraphics[width=0.5\textwidth]{R-Code/VAR Summaries/us_var_f.png}\label{fig:f1}}
+  \hfill
+  \subfloat[Covid Cases]{\includegraphics[width=0.5\textwidth]{R-Code/VAR Summaries/us_var_cc.png}\label{fig:f2}}
+  \hfill
+  \subfloat[Covid Deaths]{\includegraphics[width=0.5\textwidth]{R-Code/VAR Summaries/us_var_cd.png}\label{fig:f3}}
+  \caption{USA VAR Model}\label{fig:USAVAR}
+\end{figure}
+
+
+
+% Causalities
+\begin{figure}[!h]
+\centering
+  \includegraphics[width=\textwidth]{R-Code/Causalities/China_Covid_Cases.png}  
+  \caption{Granger Causality China Covid Cases}
+  \label{fig:GrangerChina}
+  \end{figure}
+\begin{figure}[!h]
+\centering
+  \includegraphics[width=\textwidth]{R-Code/Causalities/China_Covid_Deaths.png}  
+  \caption{Granger Causality China Covid Deaths}
+  \end{figure}
+ 
+\begin{figure}[!h]
+\centering
+  \includegraphics[width=\textwidth]{R-Code/Causalities/China_Finantial.png}  
+  \caption{Granger Causality China Finance}
+  \end{figure}
+  
+  
+\begin{figure}[!h]
+\centering
+  \includegraphics[width=\textwidth]{R-Code/Causalities/Italy_CC.png}  
+  \caption{Granger Causality Italy Covid Cases}
+  \end{figure}
+\begin{figure}[!h]
+\centering
+  \includegraphics[width=\textwidth]{R-Code/Causalities/Italy_CD.png}  
+  \caption{Granger Causality Italy Covid Deaths}
+  \end{figure}
+ 
+\begin{figure}[!h]
+\centering
+  \includegraphics[width=\textwidth]{R-Code/Causalities/Italy_F.png}  
+  \caption{Granger Causality Italy Finance}
+  \end{figure}
+
+
+\begin{figure}[!h]
+\centering
+  \includegraphics[width=\textwidth]{R-Code/Causalities/Swiss_CC.png}  
+  \caption{Granger Causality Switzerland Covid Cases}
+  \end{figure}
+\begin{figure}[!h]
+\centering
+  \includegraphics[width=\textwidth]{R-Code/Causalities/Swiss_CD.png}  
+  \caption{Granger Causality Switzerland Covid Deaths}
+  \end{figure}
+ 
+\begin{figure}[!h]
+\centering
+  \includegraphics[width=\textwidth]{R-Code/Causalities/Swiss_Financial.png}  
+  \caption{Granger Causality Switzerland Finance}
+  \end{figure}
+  
+
+\begin{figure}[!h]
+\centering
+  \includegraphics[width=\textwidth]{R-Code/Causalities/Germany_CC.png}  
+  \caption{Granger Causality Germany Covid Cases}
+  \end{figure}
+\begin{figure}[!h]
+\centering
+  \includegraphics[width=\textwidth]{R-Code/Causalities/Germany_CD.png}  
+  \caption{Granger Causality Germany Covid Deaths}
+  \end{figure}
+ 
+\begin{figure}[!h]
+\centering
+  \includegraphics[width=\textwidth]{R-Code/Causalities/Germany_F.png}  
+  \caption{Granger Causality Germany Finance}
+  \end{figure}
+  
+  
+\begin{figure}[!h]
+\centering
+  \includegraphics[width=\textwidth]{R-Code/Causalities/US_CC.png}  
+  \caption{Granger Causality USA Covid Cases}
+  \end{figure}
+\begin{figure}[!h]
+\centering
+  \includegraphics[width=\textwidth]{R-Code/Causalities/US_CD.png}  
+  \caption{Granger Causality USA Covid Deaths}
+  \end{figure}
+ 
+\begin{figure}[!h]
+\centering
+  \includegraphics[width=\textwidth]{R-Code/Causalities/US_F.png}  
+  \caption{Granger Causality USA Finance}
+  \label{fig:grangerUSA}
+  \end{figure}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % REFERENCES SECTION
